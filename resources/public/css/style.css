@@ -1,0 +1,21 @@
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.container {
+  width: 96%;
+  max-height: 96vh;
+  margin: 0 auto;
+  border-right: 1px solid #eee;
+  border-bottoe: 1px solid #eee;
+}
+.block {
+  display: inline-block;
+}
+svg {
+  border-left: 1px solid #eee;
+  border-top: 1px solid #eee;
+}
