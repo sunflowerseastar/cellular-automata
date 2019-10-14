@@ -1,21 +1,185 @@
+body {
+	margin: 0;
+}
+body,
+button {
+	font-family: 'iosevka ss05', Menlo, 'Andale Mono', monospace;
+}
 #app {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-sizing: border-box;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	box-sizing: border-box;
 }
-.container {
-  width: 96%;
-  max-height: 96vh;
-  margin: 0 auto;
-  border-right: 1px solid #eee;
-  border-bottoe: 1px solid #eee;
+.main {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	width: 96%;
+	max-height: 96vh;
+	margin: 2.6em auto 4.2em;
 }
-.block {
-  display: inline-block;
+
+.controllers {
 }
-svg {
-  border-left: 1px solid #eee;
-  border-top: 1px solid #eee;
+@media (min-width: 480px) {
+	.controllers {
+		display: flex;
+		width: 100%;
+		margin: 0 auto;
+		max-width: 650px;
+		justify-content: space-around;
+	}
+}
+
+.controller {
+	align-self: center;
+	/* margin: 0 2em; */
+	text-align: center;
+}
+.controller + .controller {
+  margin-top: 0.6em;
+}
+@media (min-width: 480px) {
+  .controller + .controller {
+    margin-top: 0;
+  }
+}
+.controller h2 {
+	font-size: 14px;
+	margin: 0 auto 0.6em;
+}
+@media (min-width: 480px) {
+	margin-bottom: 0 auto 1em;
+}
+
+
+.automata {
+	max-width: 90vh;
+	margin: 0 auto;
+	border-right: 1px solid #eee;
+	border-bottoe: 1px solid #eee;
+}
+.automata svg {
+	border-left: 1px solid #eee;
+	border-top: 1px solid #eee;
+}
+
+.stats {
+	align-self: center;
+	font-size: 12px;
+}
+
+.inc-text-input-dec {
+	align-self: center;
+}
+input {
+	margin: 0 1em;
+	padding: 10px 10px;
+	color: black;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+	background: white;
+	border: 1px solid;
+	width: 40px;
+	text-align: center;
+}
+button {
+	display: inline-block;
+	padding: 10px 20px;
+	color: white;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	font-size: 12px;
+	font-weight: bold;
+	background: black;
+	border: 1px solid transparent;
+}
+button:focus {
+	outline: none;
+	position: relative;
+}
+button:focus:after {
+	content: '';
+	display: block;
+	position: absolute;
+	top: -5px;
+	left: -6px;
+	width: calc(100% + 10px);
+	height: calc(100% + 8px);
+	border: 1px solid #e2e2e2;
+}
+@media (min-width: 1080px) {
+	button {
+		font-size: 12px;
+	}
+}
+button:hover {
+	color: black;
+	background: white;
+	cursor: pointer;
+	border: 1px solid;
+}
+
+.rules {
+	display: flex;
+	justify-content: center;
+	max-width: 650px;
+	margin: 1em auto 0;
+}
+.rule {
+	display: flex;
+	flex-direction: column;
+	margin: 0 0.2em;
+	padding: 0.2em;
+	border: 1px solid #eee;
+	cursor: pointer;
+}
+@media (min-width: 480px) {
+	.rule {
+		margin: 0 0.35em;
+		padding: 0.3em;
+	}
+}
+@media (min-width: 768px) {
+	.rule {
+		margin: 0 0.5em;
+		padding: 0.4em;
+	}
+}
+
+.rule:first-child {
+	margin-left: 0;
+}
+.rule:last-child {
+	margin-right: 0;
+}
+.rule-row {
+	flex: 1;
+	display: flex;
+	flex-direction: row;
+}
+.rule-row:first-child svg {
+	border: 1px solid #ccc;
+}
+.rule-row:first-child svg:first-child {
+	border-right: none;
+}
+.rule-row:first-child svg:last-child {
+	border-left: none;
+}
+.rule-row:last-child svg {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+.rule-row:last-child svg:first-child {
+	border: none;
+}
+.rule-row:last-child svg:last-child {
+	border: none;
 }

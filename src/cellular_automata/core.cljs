@@ -1,18 +1,27 @@
 (ns ^:figwheel-hooks cellular-automata.core
   (:require
+   [cellular-automata.components :refer [automata cell inc-text-input-dec rules]]
    [goog.dom :as gdom]
    [reagent.core :as reagent :refer [atom]]))
 
 (defn get-app-element []
   (gdom/getElement "app"))
 
-(def rule-30 [false false false true true true true false])
-(def rule-110 [false true true false true true true false])
-(def rule-250 [false false false true true true true false])
-(def rule-254 [true true true true true true true false])
+(def rule-30 [0 0 0 1 1 1 1 0])
+(def rule-110 [0 1 1 0 1 1 1 0])
+(def rule-250 [0 0 0 1 1 1 1 0])
+(def rule-254 [1 1 1 1 1 1 1 0])
+
+(def rule (atom rule-110))
+(def rule-name (atom 10))
+(def stats (atom {:computed "asdf"}))
+(def num-rows (atom 3))
 
 (defn rule-translate [rule-set L C R]
-  (let [a (rule-set 0)
+  (let [L (pos? L)
+        C (pos? C)
+        R (pos? R)
+        a (rule-set 0)
         b (rule-set 1)
         c (rule-set 2)
         d (rule-set 3)
@@ -31,7 +40,7 @@
           :else (println "DEBUG"))))
 
 (defn create-new-row [prev-row rule]
-  (let [prev-row-expanded (flatten (conj [false false] prev-row [false false]))
+  (let [prev-row-expanded (flatten (conj [0 0] prev-row [0 0]))
         times (+ (count prev-row) 2)]
     (map-indexed #(let [left (nth prev-row-expanded %)
                         center (nth prev-row-expanded (inc %))
@@ -40,29 +49,58 @@
                  (repeat times 0))))
 
 (defn create-rows [number-of-rows rule]
-  (loop [row [true] acc [] n (dec number-of-rows) row-number 0]
+  (loop [row [1] acc [] n (dec number-of-rows) row-number 0]
     (if (> row-number n)
       acc
       (let [new-row (vec (create-new-row row rule))]
         (recur new-row (conj (if (empty? acc) [row] acc) new-row) n (inc row-number))))))
 
-(defn cell [value]
-  [:svg {:view-box [0 0 10 10] :style {:fill (if value "black" "white")}} [:rect {:width 10 :height 10}]])
+(defn inc-rows []
+  (swap! num-rows inc))
 
-(defn automata [data]
-  (let [len (count (last data))]
-    [:div.container {:style {:display "grid" :grid-template-columns (str "repeat(" len ", " (/ 100 len) "%)")}}
-     (for [row data]
-       (let [expansion-per-side (/ (- len (count row)) 2)
-             row-expanded (vec (concat (repeat expansion-per-side false) row (repeat expansion-per-side false)))]
-         (map-indexed (fn [idx value] ^{:key (str idx value)} [cell value]) row-expanded)))]))
+(defn dec-rows []
+  (swap! num-rows dec))
+
+(defn reset-rows [new-num-rows]
+  (reset! num-rows new-num-rows))
+
+(defn rule-name->rule [rule-name]
+  (let [binary-str (-> (js/Number rule-name) (.toString 2))
+        binary (map js/parseInt binary-str)
+        fill-count (- 8 (count binary))
+        fill (repeat fill-count 0)]
+    (-> (conj binary fill) flatten vec)))
+
+(defn inc-rule-name []
+  (swap! rule-name inc)
+  (reset! rule (rule-name->rule @rule-name)))
+
+(defn dec-rule-name []
+  (swap! rule-name dec)
+  (reset! rule (rule-name->rule @rule-name)))
+
+(defn reset-rule-name [new-rule-name]
+  (reset! rule-name new-rule-name)
+  (reset! rule (rule-name->rule @rule-name)))
+
+(defn toggle-rule [rule-num]
+  (let [new-rule (assoc @rule rule-num (if (zero? (@rule rule-num)) 1 0))]
+    (reset! rule new-rule)))
 
 (defn main []
-  (let [data (create-rows 20 rule-250)
+  (let [data (create-rows (- @num-rows 1) @rule)
         len (count (last data))]
-    (do
-      ;; (println "main " data len)
-      [:div.main [automata data]])))
+    [:div.main
+     [automata data]
+     [:p.stats "# computed: " (reduce #(+ % (count %2)) 0 data)]
+     [:div.controllers
+      [:div.controller
+       [:h2 "rule"]
+       [inc-text-input-dec @rule-name inc-rule-name dec-rule-name reset-rule-name]]
+      [:div.controller
+       [:h2 "rows"]
+       [inc-text-input-dec @num-rows inc-rows dec-rows reset-rows]]]
+     [rules @rule #(toggle-rule %)]]))
 
 (defn mount [el]
   (reagent/render-component [main] el))
@@ -71,14 +109,7 @@
   (when-let [el (get-app-element)]
     (mount el)))
 
-;; conditionally start your application based on the presence of an "app" element
-;; this is particularly helpful for testing this ns without launching the app
 (mount-app-element)
 
-;; specify reload hook with ^;after-load metadata
 (defn ^:after-load on-reload []
-  (mount-app-element)
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
-  )
+  (mount-app-element))
