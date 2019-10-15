@@ -90,16 +90,24 @@ button {
 }
 
 .stats {
-	align-self: center;
 	font-size: 12px;
 	text-align: center;
-	opacity: 0.3;
 	display: none;
+	color: #ccc;
+	width: 100%;
 }
 @media (min-width: 480px) {
 	.stats {
 		display: block;
 	}
+}
+.stats.left {
+	float: left;
+	width: 40%;
+}
+.stats.right {
+	float: right;
+	width: 40%;
 }
 
 .inc-text-input-dec {
@@ -176,8 +184,8 @@ button.inactive {
 .rule {
 	display: flex;
 	flex-direction: column;
-  position: relative;
-  top: 0;
+	position: relative;
+	top: 0;
 	width: 100%;
 	margin: 0 0.2em;
 	padding: 0.2em;
@@ -186,7 +194,7 @@ button.inactive {
 	transition: all 0.5s cubic-bezier(0.3, 0.8, 0.1, 0.95);
 }
 .rule:hover {
-  top: -5px;
+	top: -5px;
 }
 @media (min-width: 480px) {
 	.rule {

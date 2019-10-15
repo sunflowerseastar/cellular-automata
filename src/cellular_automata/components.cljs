@@ -39,9 +39,9 @@
        [:div.rule-row (map-indexed (fn [idx value] ^{:key (str idx value)} [cell value false false]) [0 (current-rule-set rule-idx) 0])]])
     rule-triads)])
 
-(defn inc-text-input-dec [num-rows is-dec-inactive is-inc-inactive dec-rows inc-rows reset-rows]
+(defn inc-text-input-dec [num-rows is-dec-inactive dec-rows inc-rows reset-rows]
   [:div.inc-text-input-dec
    [:button {:on-click dec-rows :class (when is-dec-inactive "inactive")} "-"]
    [:input {:type :text :value num-rows
             :on-change #(reset-rows (-> % .-target .-value))}]
-   [:button {:on-click inc-rows :class (when is-inc-inactive "inactive")} "+"]])
+   [:button {:on-click inc-rows} "+"]])

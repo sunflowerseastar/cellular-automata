@@ -37,13 +37,12 @@
                         center (nth prev-row-expanded (inc %))
                         right (nth prev-row-expanded (+ % 2))]
                     (rule-translate rule left center right))
-                 (repeat times 0))))
+                 (range 0 times))))
 (def create-new-row-memo (memoize create-new-row))
 
 (defn create-rows [number-of-rows rule]
-  (let [total-x-count (+ (* number-of-rows 2) 1)
-        starting-row (vec (concat (repeat number-of-rows 0) [1] (repeat number-of-rows 0)))]
-    (loop [row starting-row acc [] n (dec number-of-rows) row-number 0]
+  (let [starting-row (vec (concat (repeat number-of-rows 0) [1] (repeat number-of-rows 0)))]
+    (loop [row starting-row acc [] n (dec number-of-rows) row-number 1]
       (if (> row-number n)
         acc
         (let [new-row (vec (create-new-row-memo row rule))
