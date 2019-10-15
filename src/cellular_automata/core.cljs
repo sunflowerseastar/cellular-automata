@@ -57,7 +57,7 @@
        [inc-text-input-dec @rule-name false false dec-rule-name! inc-rule-name! reset-rule-name!]]
       [:div.controller
        [:h2 "rows"]
-       (let [is-dec-inactive (< @num-rows 0)]
+       (let [is-dec-inactive (<= @num-rows 0)]
          [inc-text-input-dec @num-rows is-dec-inactive false dec-rows! inc-rows! reset-rows!])]]
      [rules @rule #(toggle-rule! %)]]))
 

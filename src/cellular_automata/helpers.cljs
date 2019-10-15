@@ -29,21 +29,25 @@
     (-> (conj binary fill) flatten vec)))
 
 (defn create-new-row [prev-row rule]
-  (let [prev-row-expanded (flatten (conj [0 0] prev-row [0 0]))
+  (let [prf (first prev-row)
+        prl (last prev-row)
+        prev-row-expanded (flatten (conj [prf prf] prev-row [prl prl]))
         times (+ (count prev-row) 2)]
     (map-indexed #(let [left (nth prev-row-expanded %)
                         center (nth prev-row-expanded (inc %))
                         right (nth prev-row-expanded (+ % 2))]
                     (rule-translate rule left center right))
                  (repeat times 0))))
-
 (def create-new-row-memo (memoize create-new-row))
 
 (defn create-rows [number-of-rows rule]
-  (loop [row [1] acc [] n (dec number-of-rows) row-number 0]
-    (if (> row-number n)
-      acc
-      (let [new-row (vec (create-new-row-memo row rule))]
-        (recur new-row (conj (if (empty? acc) [row] acc) new-row) n (inc row-number))))))
-
+  (let [total-x-count (+ (* number-of-rows 2) 1)
+        starting-row (vec (concat (repeat number-of-rows 0) [1] (repeat number-of-rows 0)))]
+    (loop [row starting-row acc [] n (dec number-of-rows) row-number 0]
+      (if (> row-number n)
+        acc
+        (let [new-row (vec (create-new-row-memo row rule))
+              new-row-trimmed (vec (->> new-row (drop 1) drop-last))
+              new-acc (conj (if (empty? acc) [row] acc) new-row-trimmed)]
+          (recur new-row-trimmed new-acc n (inc row-number)))))))
 (def create-rows-memo (memoize create-rows))

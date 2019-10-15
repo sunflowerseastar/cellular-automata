@@ -21,15 +21,13 @@
   (let [len (count (last data))]
     [:div.automata.hide-borders {:style {:display "grid" :grid-template-columns (str "repeat(" len ", " (/ 100 len) "%)")}}
      (map-indexed (fn [y-idx row]
-                    (let [expansion-per-side (/ (- len (count row)) 2)
-                          row-expanded (vec (concat (repeat expansion-per-side 0) row (repeat expansion-per-side 0)))]
-                      (map-indexed
-                       (fn [x-idx value]
-                         (let [is-last-column (zero? (mod (inc x-idx) len))
-                               is-last-row (= (inc y-idx) (count data))]
-                           ^{:key (str x-idx value)}
-                           [cell value is-last-column is-last-row]))
-                       row-expanded)))
+                    (map-indexed
+                     (fn [x-idx value]
+                       (let [is-last-column (zero? (mod (inc x-idx) len))
+                             is-last-row (= (inc y-idx) (count data))]
+                         ^{:key (str x-idx value)}
+                         [cell value is-last-column is-last-row]))
+                     row))
                   data)]))
 
 (defn rules [current-rule-set on-click]
