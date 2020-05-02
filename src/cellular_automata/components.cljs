@@ -9,10 +9,11 @@
                   [0 0 1]
                   [0 0 0]])
 
-(defn cell [value is-last-column is-last-row]
+(defn cell [value is-last-column is-last-row x y]
   [:svg.cell {:view-box [0 0 10 10]
               :class [(if is-last-column "is-last-column") (if is-last-row "is-last-row")]
-              :style {:fill (if (pos? value) "black" "white") :background (if (pos? value) "black" "white")}}
+              :style {:fill (if (pos? value) "black" "white") :background (if (pos? value) "black" "white")
+                      :grid-column (+ x 1) :grid-row (+ y 1)}}
    [:rect {:width 10 :height 10}]])
 
 (defn automata [data]
@@ -24,7 +25,7 @@
                        (let [is-last-column (zero? (mod (inc x-idx) len))
                              is-last-row (= (inc y-idx) (count data))]
                          ^{:key (str x-idx value)}
-                         [cell value is-last-column is-last-row]))
+                         [cell value is-last-column is-last-row x-idx y-idx]))
                      row))
                   data)]))
 
@@ -33,8 +34,8 @@
    (map-indexed
     (fn [rule-idx rule-triad] ^{:key (str rule-triad)}
       [:div.rule {:on-click #(on-click rule-idx)}
-       [:div.rule-row (map-indexed (fn [idx value] ^{:key (str idx value)} [cell value false false]) rule-triad)]
-       [:div.rule-row (map-indexed (fn [idx value] ^{:key (str idx value)} [cell value false false]) [0 (current-rule-set rule-idx) 0])]])
+       (map-indexed (fn [idx value] ^{:key (str idx value)} [cell value false false idx 0]) rule-triad)
+       (map-indexed (fn [idx value] ^{:key (str idx value)} [cell value false false idx 1]) [0 (current-rule-set rule-idx) 0])])
     rule-triads)])
 
 (defn inc-text-input-dec [num-rows is-dec-inactive dec-rows inc-rows reset-rows]
