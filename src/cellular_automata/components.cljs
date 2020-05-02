@@ -9,8 +9,6 @@
                   [0 0 1]
                   [0 0 0]])
 
-(def automata-row-count-border-cut-off 25)
-
 (defn cell [value is-last-column is-last-row]
   [:svg.cell {:view-box [0 0 10 10]
               :class [(if is-last-column "is-last-column") (if is-last-row "is-last-row")]
