@@ -243,11 +243,11 @@ button.inactive {
 /* fade */
 
 .fade-in-1 {
-  transition: opacity 2.6s ease-in-out;
+  transition: opacity 1.2s ease-in-out;
   opacity: 0;
 }
 .fade-in-2 {
-  transition: opacity 6s ease-in-out;
+  transition: opacity 3s ease-in-out;
   opacity: 0;
 }
 .has-initially-loaded,

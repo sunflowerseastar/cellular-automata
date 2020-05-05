@@ -30,7 +30,7 @@
                   data)]))
 
 (defn rules [current-rule-set on-click]
-  [:div.rules
+  [:div.rules.fade-in-2
    (map-indexed
     (fn [rule-idx rule-triad] ^{:key (str rule-triad)}
       [:div.rule {:on-click #(on-click rule-idx)}

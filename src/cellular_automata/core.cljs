@@ -67,11 +67,11 @@
       (let [data (create-rows-memo @num-rows @rule)
             len (count (last data))]
         [:div.main.fade-in-1 {:class [(if @has-initially-loaded "has-initially-loaded")]}
-         [:div.automata-container [automata data]
-          [:div.stats
+         [:div.automata-container (automata data)
+          [:div.stats.fade-in-2
            [:p.stats.left (do (reduce #(+ % (count %2)) 0 data)) " cells showing"]
            [:p.stats.right @cells-rendered " cells rendered"]]]
-         [:div.controllers
+         [:div.controllers.fade-in-2
           [:div.controller
            [:h2 "rule"]
            [inc-text-input-dec @rule-name false dec-rule-name! inc-rule-name! reset-rule-name!]]
@@ -79,7 +79,7 @@
            [:h2 "rows"]
            (let [is-dec-inactive (<= @num-rows 2)]
              [inc-text-input-dec @num-rows is-dec-inactive dec-rows! inc-rows! reset-rows!])]]
-         [rules @rule #(toggle-rule! %)]]))}))
+         (rules @rule #(toggle-rule! %))]))}))
 
 (defn mount [el]
   (reagent/render-component [main] el))
