@@ -8,6 +8,8 @@
 (defn get-app-element []
   (gdom/getElement "app"))
 
+(defonce has-initially-loaded (atom false))
+
 (def rule (atom []))
 (def rule-name (atom 0))
 (def cells-rendered (atom 0))
@@ -59,11 +61,12 @@
 
 (defn main []
   (create-class
-   {:reagent-render
+   {:component-did-mount (fn [] (js/setTimeout #(reset! has-initially-loaded true) 0))
+    :reagent-render
     (fn [this]
       (let [data (create-rows-memo @num-rows @rule)
             len (count (last data))]
-        [:div.main
+        [:div.main.fade-in-1 {:class [(if @has-initially-loaded "has-initially-loaded")]}
          [:div.automata-container [automata data]
           [:div.stats
            [:p.stats.left (do (reduce #(+ % (count %2)) 0 data)) " cells showing"]
